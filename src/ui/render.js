@@ -247,23 +247,7 @@ function drawPose(app, pose, group, isSelectedPose) {
   ctx.fill();
   ctx.stroke();
 
-  // Long edge arrow (front) - pointing from edge toward center
-  ctx.fillStyle = arrow;
-  ctx.beginPath();
-  ctx.moveTo(lPx / 2, 0);
-  ctx.lineTo(lPx / 2 - 18, -10);
-  ctx.lineTo(lPx / 2 - 18, 10);
-  ctx.closePath();
-  ctx.fill();
-
-  ctx.strokeStyle = arrow;
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.moveTo(lPx / 2, 0);
-  ctx.lineTo(lPx / 2 - 40, 0);
-  ctx.stroke();
-
-  // Short edge arrow - pointing from one short edge to the other
+  // Long edge arrow - vertical, from bottom edge pointing toward center
   ctx.fillStyle = arrow;
   ctx.beginPath();
   ctx.moveTo(0, wPx / 2);
@@ -275,8 +259,24 @@ function drawPose(app, pose, group, isSelectedPose) {
   ctx.strokeStyle = arrow;
   ctx.lineWidth = 3;
   ctx.beginPath();
-  ctx.moveTo(0, -wPx / 2);
-  ctx.lineTo(0, wPx / 2 - 18);
+  ctx.moveTo(0, wPx / 2);
+  ctx.lineTo(0, wPx / 2 - 40);
+  ctx.stroke();
+
+  // Short edge arrow - horizontal, from center pointing toward right edge
+  ctx.fillStyle = arrow;
+  ctx.beginPath();
+  ctx.moveTo(lPx / 2, 0);
+  ctx.lineTo(lPx / 2 - 18, -10);
+  ctx.lineTo(lPx / 2 - 18, 10);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.strokeStyle = arrow;
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(lPx / 2 - 18, 0);
   ctx.stroke();
 
   ctx.restore();

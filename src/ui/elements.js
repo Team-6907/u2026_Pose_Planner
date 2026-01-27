@@ -1,0 +1,30 @@
+export function cacheElements(doc) {
+  return {
+    canvas: doc.getElementById("fieldCanvas"),
+    poseList: doc.getElementById("poseList"),
+    poseCount: doc.getElementById("poseCount"),
+    addPose: doc.getElementById("addPose"),
+    deletePose: doc.getElementById("deletePose"),
+    addGroup: doc.getElementById("addGroup"),
+    groupFilters: doc.getElementById("groupFilters"),
+    poseName: doc.getElementById("poseName"),
+    poseGroup: doc.getElementById("poseGroup"),
+    poseX: doc.getElementById("poseX"),
+    poseY: doc.getElementById("poseY"),
+    poseTheta: doc.getElementById("poseTheta"),
+    poseXInput: doc.getElementById("poseXInput"),
+    poseYInput: doc.getElementById("poseYInput"),
+    poseThetaInput: doc.getElementById("poseThetaInput"),
+    copyJson: doc.getElementById("copyJson"),
+    status: doc.getElementById("status"),
+    resetView: doc.getElementById("resetView"),
+    coordinates: doc.getElementById("coordinates"),
+    configBtn: doc.getElementById("configBtn"),
+    configModal: doc.getElementById("configModal"),
+    configClose: doc.getElementById("configClose"),
+    configSave: doc.getElementById("configSave"),
+    robotLength: doc.getElementById("robotLength"),
+    robotWidth: doc.getElementById("robotWidth"),
+    groupContextMenu: doc.getElementById("groupContextMenu")
+  };
+}

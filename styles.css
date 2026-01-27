@@ -546,6 +546,12 @@ input[type="range"]::-moz-range-thumb {
 
 .file-actions .btn {
   width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  justify-content: center;
+  font-size: 13px;
+  padding: 10px 12px;
 }
 
 .file-actions .btn-copy {

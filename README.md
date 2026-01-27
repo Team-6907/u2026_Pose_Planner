@@ -24,10 +24,19 @@ Open `http://localhost:8000/` in a browser.
 
 ## Workflow
 
-1. **Import**: Copy your existing `poses.json` content and paste it into the planner (or use file import when implemented)
+1. **Import**:
+   - Click "Paste JSON" to import from clipboard
+   - Click "Upload File" to import a poses.json file
+   - Or start fresh and create poses from scratch
 2. **Edit**: Use the GUI to create, modify, and organize poses visually on the field
-3. **Export**: Click "Copy JSON to Clipboard" to copy the updated poses
+   - Double-click on the field to add a new pose
+   - Drag poses to move them
+   - Drag the rotation handle to adjust orientation
+   - Use keyboard shortcuts: ⌘Z (undo), ⌘⇧Z (redo), Delete (remove pose)
+3. **Export**: Click "Copy JSON" to copy the updated poses to clipboard
 4. **Deploy**: Paste the JSON into your robot project at `src/main/deploy/goatlib-poses/poses.json`
+
+**Auto-save**: All changes are automatically saved to browser localStorage, so you won't lose your work if you refresh the page.
 
 Groups are stored with `/` hierarchy (for example: Auto/Score).
 

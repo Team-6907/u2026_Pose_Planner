@@ -2,11 +2,19 @@ import { FIELD_ASSET } from "../field/fieldAsset.js";
 import { parsePoseList, pickGroupColor, selectFirstPose, syncGroupFilter, getTotalPoseCount } from "../state/poseState.js";
 import { round } from "../utils/math.js";
 
-// Auto-load is disabled in standalone version
-// Users should import poses.json via copy-paste or file import
+const STORAGE_KEY = "goatlib-pose-planner-state";
+
+// Auto-load from localStorage on startup
 export async function loadDefaultPoses(app) {
-  // No default poses to load in standalone version
-  console.info("Ready to import poses via copy-paste or file upload");
+  const saved = loadFromLocalStorage();
+  if (saved) {
+    app.state.groups = saved;
+    syncGroupFilter(app.state);
+    selectFirstPose(app.state);
+    app.setStatus(`Loaded ${getTotalPoseCount(app.state)} poses from browser storage.`);
+  } else {
+    console.info("Ready to import poses via paste or file upload");
+  }
 }
 
 export function parsePosePayload(data) {
@@ -50,3 +58,38 @@ export function buildPosePayload(state) {
     }))
   };
 }
+
+// LocalStorage functions
+export function saveToLocalStorage(state) {
+  try {
+    const data = buildPosePayload(state);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    return true;
+  } catch (error) {
+    console.error("Failed to save to localStorage:", error);
+    return false;
+  }
+}
+
+export function loadFromLocalStorage() {
+  try {
+    const json = localStorage.getItem(STORAGE_KEY);
+    if (!json) return null;
+    const data = JSON.parse(json);
+    return parsePosePayload(data);
+  } catch (error) {
+    console.error("Failed to load from localStorage:", error);
+    return null;
+  }
+}
+
+export function clearLocalStorage() {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+    return true;
+  } catch (error) {
+    console.error("Failed to clear localStorage:", error);
+    return false;
+  }
+}
+

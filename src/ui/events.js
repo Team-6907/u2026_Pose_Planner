@@ -1,4 +1,4 @@
-import { buildPosePayload } from "../io/poseIO.js";
+import { buildPosePayload, parsePosePayload, saveToLocalStorage, clearLocalStorage } from "../io/poseIO.js";
 import {
   createDefaultName,
   ensureGroup,
@@ -27,7 +27,11 @@ export function wireEvents(app) {
   elements.poseXInput.addEventListener("change", () => updatePoseFromNumberInputs(app));
   elements.poseYInput.addEventListener("change", () => updatePoseFromNumberInputs(app));
   elements.poseThetaInput.addEventListener("change", () => updatePoseFromNumberInputs(app));
+  elements.pasteJson.addEventListener("click", () => handlePaste(app));
+  elements.uploadJson.addEventListener("click", () => elements.fileInput.click());
+  elements.fileInput.addEventListener("change", (e) => handleFileUpload(app, e));
   elements.copyJson.addEventListener("click", () => handleCopy(app));
+  elements.clearAll.addEventListener("click", () => handleClearAll(app));
   elements.resetView?.addEventListener("click", () => resetView(app));
 
   elements.configBtn?.addEventListener("click", () => openConfigModal(app));
@@ -61,6 +65,7 @@ function addPoseAtCenter(app) {
     thetaDegrees: 0
   });
   app.selectPose(target.groupIndex, target.group.poses.length - 1);
+  saveToLocalStorage(state);
   render(app);
 }
 
@@ -76,6 +81,7 @@ function addPoseAt(app, fx, fy) {
     thetaDegrees: 0
   });
   app.selectPose(target.groupIndex, target.group.poses.length - 1);
+  saveToLocalStorage(state);
   render(app);
 }
 
@@ -91,6 +97,7 @@ function deleteSelectedPose(app) {
   } else {
     app.selectPose(state.selectedGroupIndex, Math.max(0, state.selectedPoseIndex - 1));
   }
+  saveToLocalStorage(state);
   render(app);
 }
 
@@ -98,6 +105,7 @@ function onNameChange(app) {
   const pose = getSelectedPose(app.state);
   if (pose) {
     pose.name = app.elements.poseName.value.trim() || pose.name;
+    saveToLocalStorage(app.state);
     renderPoseList(app);
   }
 }
@@ -117,6 +125,7 @@ function addGroup(app) {
     color: pickGroupColor(app.state.groups.length),
     poses: []
   });
+  saveToLocalStorage(app.state);
   render(app);
 }
 
@@ -176,6 +185,7 @@ function renameGroup(app, oldName) {
     app.state.groupFilter.delete(oldName);
     app.state.groupFilter.add(name);
   }
+  saveToLocalStorage(app.state);
   updateInputsFromSelection(app);
   render(app);
 }
@@ -198,6 +208,7 @@ function deleteGroup(app, name) {
   } else if (app.state.selectedGroupIndex > index) {
     selectPose(app.state, app.state.selectedGroupIndex - 1, app.state.selectedPoseIndex);
   }
+  saveToLocalStorage(app.state);
   updateInputsFromSelection(app);
   render(app);
 }
@@ -221,6 +232,7 @@ function moveSelectedPoseToGroup(app, targetName) {
   const pose = currentGroup.poses.splice(state.selectedPoseIndex, 1)[0];
   target.group.poses.push(pose);
   app.selectPose(target.groupIndex, target.group.poses.length - 1);
+  saveToLocalStorage(state);
 }
 
 async function handleCopy(app) {
@@ -230,6 +242,72 @@ async function handleCopy(app) {
   } catch {
     app.setStatus("Copy failed", true);
   }
+}
+
+async function handlePaste(app) {
+  try {
+    const text = await navigator.clipboard.readText();
+    const data = JSON.parse(text);
+    const groups = parsePosePayload(data);
+    if (groups.length === 0) {
+      app.setStatus("Invalid JSON format", true);
+      return;
+    }
+    saveUndoState(app.state);
+    app.state.groups = groups;
+    syncGroupFilter(app.state);
+    selectFirstPose(app.state);
+    saveToLocalStorage(app.state);
+    render(app);
+    app.setStatus(`Imported ${groups.reduce((sum, g) => sum + g.poses.length, 0)} poses`);
+  } catch (error) {
+    app.setStatus("Paste failed: " + error.message, true);
+  }
+}
+
+function handleFileUpload(app, event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      const groups = parsePosePayload(data);
+      if (groups.length === 0) {
+        app.setStatus("Invalid JSON format", true);
+        return;
+      }
+      saveUndoState(app.state);
+      app.state.groups = groups;
+      syncGroupFilter(app.state);
+      selectFirstPose(app.state);
+      saveToLocalStorage(app.state);
+      render(app);
+      app.setStatus(`Imported ${groups.reduce((sum, g) => sum + g.poses.length, 0)} poses from ${file.name}`);
+    } catch (error) {
+      app.setStatus("File import failed: " + error.message, true);
+    }
+  };
+  reader.onerror = () => {
+    app.setStatus("Failed to read file", true);
+  };
+  reader.readAsText(file);
+  event.target.value = "";
+}
+
+function handleClearAll(app) {
+  if (!confirm("Clear all poses and groups? This will also clear browser storage.")) {
+    return;
+  }
+  saveUndoState(app.state);
+  app.state.groups = [];
+  app.state.selectedGroupIndex = -1;
+  app.state.selectedPoseIndex = -1;
+  syncGroupFilter(app.state);
+  clearLocalStorage();
+  render(app);
+  app.setStatus("All poses cleared");
 }
 
 function resetView(app) {
@@ -269,6 +347,7 @@ function updatePoseFromSliders(app) {
   app.elements.poseYInput.value = round(p.y, 2);
   app.elements.poseThetaInput.value = round(p.thetaDegrees, 0);
 
+  saveToLocalStorage(app.state);
   render(app);
 }
 
@@ -288,6 +367,7 @@ function updatePoseFromNumberInputs(app) {
   app.elements.poseYInput.value = round(p.y, 2);
   app.elements.poseThetaInput.value = round(p.thetaDegrees, 0);
 
+  saveToLocalStorage(app.state);
   render(app);
 }
 
@@ -353,10 +433,15 @@ function onPointerMove(app, e) {
 }
 
 function onPointerUp(app) {
+  const wasDragging = app.state.drag !== null;
   app.state.drag = null;
   app.state.isPanning = false;
   app.state.panStart = null;
   app.elements.canvas.style.cursor = "default";
+
+  if (wasDragging) {
+    saveToLocalStorage(app.state);
+  }
 }
 
 function onDoubleClick(app, e) {
@@ -403,6 +488,7 @@ function undo(app) {
   app.state.groups = JSON.parse(app.state.undoStack.pop());
   syncGroupFilter(app.state);
   selectFirstPose(app.state);
+  saveToLocalStorage(app.state);
   updateInputsFromSelection(app);
   render(app);
   app.setStatus("Undo");
@@ -414,6 +500,7 @@ function redo(app) {
   app.state.groups = JSON.parse(app.state.redoStack.pop());
   syncGroupFilter(app.state);
   selectFirstPose(app.state);
+  saveToLocalStorage(app.state);
   updateInputsFromSelection(app);
   render(app);
   app.setStatus("Redo");

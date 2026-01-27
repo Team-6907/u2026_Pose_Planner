@@ -365,6 +365,21 @@ header {
   transform: translateY(-1px);
 }
 
+.btn-secondary {
+  flex: 1;
+  background: var(--bg-tertiary);
+  border-color: var(--border);
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--bg-hover);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
 .btn-ghost {
   background: transparent;
   border-color: transparent;
@@ -525,7 +540,12 @@ input[type="range"]::-moz-range-thumb {
 /* File Actions */
 .file-actions {
   display: flex;
-  gap: 10px;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.file-actions .btn {
+  width: 100%;
 }
 
 .file-actions .btn-copy {
@@ -551,32 +571,6 @@ input[type="range"]::-moz-range-thumb {
 
 .status.error {
   color: var(--danger);
-}
-
-/* Shortcuts Panel */
-.panel-shortcuts {
-  margin-top: auto;
-  background: var(--bg-primary);
-}
-
-.shortcut-grid {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 8px 14px;
-  font-size: 13px;
-  color: var(--text-secondary);
-}
-
-kbd {
-  font-family: "SF Mono", Monaco, monospace;
-  font-size: 11px;
-  font-weight: 600;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
-  border-radius: 5px;
-  padding: 4px 8px;
-  color: var(--text-primary);
-  text-align: center;
 }
 
 /* Canvas Area */

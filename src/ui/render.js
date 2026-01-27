@@ -262,6 +262,21 @@ function drawPose(app, pose, group, isSelectedPose) {
   ctx.lineTo(lPx / 2 - 18, 0);
   ctx.stroke();
 
+  ctx.fillStyle = arrow;
+  ctx.beginPath();
+  ctx.moveTo(0, wPx / 2);
+  ctx.lineTo(-10, wPx / 2 - 18);
+  ctx.lineTo(10, wPx / 2 - 18);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.strokeStyle = arrow;
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(0, wPx / 2 - 18);
+  ctx.stroke();
+
   ctx.restore();
 
   ctx.font = "bold 14px -apple-system, sans-serif";

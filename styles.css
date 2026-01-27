@@ -729,6 +729,30 @@ canvas {
   box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
+.modal-body textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-family: "SF Mono", Monaco, "Cascadia Code", monospace;
+  resize: vertical;
+  min-height: 200px;
+  transition: all 0.15s ease;
+}
+
+.modal-body textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.modal-body textarea::placeholder {
+  color: var(--text-muted);
+}
+
 .modal-footer {
   padding: 14px 20px;
   border-top: 1px solid var(--border);

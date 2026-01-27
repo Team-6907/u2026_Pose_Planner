@@ -174,6 +174,27 @@
       </div>
     </div>
 
+    <!-- Import JSON Modal -->
+    <div id="importModal" class="modal hidden">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="modal-title">Import JSON</span>
+          <button id="importClose" class="btn btn-icon" type="button">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="importTextarea">Paste your poses.json content here:</label>
+            <textarea id="importTextarea" rows="12" placeholder='{"schemaVersion": 1, "groups": [...]}'></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="importCancel" class="btn btn-ghost">Cancel</button>
+          <button id="importConfirm" class="btn btn-primary">Import</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Group Context Menu -->
     <div id="groupContextMenu" class="context-menu hidden">
       <button type="button" data-action="rename">Rename</button>

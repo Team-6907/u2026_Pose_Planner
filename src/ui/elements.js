@@ -29,6 +29,11 @@ export function cacheElements(doc) {
     configSave: doc.getElementById("configSave"),
     robotLength: doc.getElementById("robotLength"),
     robotWidth: doc.getElementById("robotWidth"),
-    groupContextMenu: doc.getElementById("groupContextMenu")
+    groupContextMenu: doc.getElementById("groupContextMenu"),
+    importModal: doc.getElementById("importModal"),
+    importClose: doc.getElementById("importClose"),
+    importCancel: doc.getElementById("importCancel"),
+    importConfirm: doc.getElementById("importConfirm"),
+    importTextarea: doc.getElementById("importTextarea")
   };
 }

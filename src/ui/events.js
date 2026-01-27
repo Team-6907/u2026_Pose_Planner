@@ -27,7 +27,7 @@ export function wireEvents(app) {
   elements.poseXInput.addEventListener("change", () => updatePoseFromNumberInputs(app));
   elements.poseYInput.addEventListener("change", () => updatePoseFromNumberInputs(app));
   elements.poseThetaInput.addEventListener("change", () => updatePoseFromNumberInputs(app));
-  elements.pasteJson.addEventListener("click", () => handlePaste(app));
+  elements.pasteJson.addEventListener("click", () => openImportModal(app));
   elements.uploadJson.addEventListener("click", () => elements.fileInput.click());
   elements.fileInput.addEventListener("change", (e) => handleFileUpload(app, e));
   elements.copyJson.addEventListener("click", () => handleCopy(app));
@@ -40,6 +40,13 @@ export function wireEvents(app) {
   elements.configModal
     ?.querySelector(".modal-backdrop")
     ?.addEventListener("click", () => closeConfigModal(app));
+
+  elements.importClose?.addEventListener("click", () => closeImportModal(app));
+  elements.importCancel?.addEventListener("click", () => closeImportModal(app));
+  elements.importConfirm?.addEventListener("click", () => handleImportConfirm(app));
+  elements.importModal
+    ?.querySelector(".modal-backdrop")
+    ?.addEventListener("click", () => closeImportModal(app));
 
   elements.canvas.addEventListener("pointerdown", (e) => onPointerDown(app, e));
   elements.canvas.addEventListener("pointermove", (e) => onPointerMove(app, e));
@@ -244,9 +251,25 @@ async function handleCopy(app) {
   }
 }
 
-async function handlePaste(app) {
+function openImportModal(app) {
+  app.elements.importTextarea.value = "";
+  app.elements.importModal.classList.remove("hidden");
+  setTimeout(() => app.elements.importTextarea.focus(), 100);
+}
+
+function closeImportModal(app) {
+  app.elements.importModal.classList.add("hidden");
+  app.elements.importTextarea.value = "";
+}
+
+function handleImportConfirm(app) {
+  const text = app.elements.importTextarea.value.trim();
+  if (!text) {
+    app.setStatus("Please paste JSON content", true);
+    return;
+  }
+
   try {
-    const text = await navigator.clipboard.readText();
     const data = JSON.parse(text);
     const groups = parsePosePayload(data);
     if (groups.length === 0) {
@@ -259,9 +282,10 @@ async function handlePaste(app) {
     selectFirstPose(app.state);
     saveToLocalStorage(app.state);
     render(app);
+    closeImportModal(app);
     app.setStatus(`Imported ${groups.reduce((sum, g) => sum + g.poses.length, 0)} poses`);
   } catch (error) {
-    app.setStatus("Paste failed: " + error.message, true);
+    app.setStatus("Invalid JSON: " + error.message, true);
   }
 }
 

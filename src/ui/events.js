@@ -69,7 +69,7 @@ function addPoseAtCenter(app) {
     name: createDefaultName(state),
     x: m.fieldLengthMeters / 2,
     y: m.fieldWidthMeters / 2,
-    thetaDegrees: 0
+    thetaDegrees: -90
   });
   app.selectPose(target.groupIndex, target.group.poses.length - 1);
   saveToLocalStorage(state);
@@ -85,7 +85,7 @@ function addPoseAt(app, fx, fy) {
     name: createDefaultName(state),
     x: clamp(fx, 0, m.fieldLengthMeters),
     y: clamp(fy, 0, m.fieldWidthMeters),
-    thetaDegrees: 0
+    thetaDegrees: -90
   });
   app.selectPose(target.groupIndex, target.group.poses.length - 1);
   saveToLocalStorage(state);

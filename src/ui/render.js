@@ -247,37 +247,37 @@ function drawPose(app, pose, group, isSelectedPose) {
   ctx.fill();
   ctx.stroke();
 
-  // Long edge arrow - vertical, from bottom edge pointing toward center
-  ctx.fillStyle = arrow;
-  ctx.beginPath();
-  ctx.moveTo(0, wPx / 2);
-  ctx.lineTo(-10, wPx / 2 - 18);
-  ctx.lineTo(10, wPx / 2 - 18);
-  ctx.closePath();
-  ctx.fill();
-
-  ctx.strokeStyle = arrow;
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.moveTo(0, wPx / 2);
-  ctx.lineTo(0, wPx / 2 - 40);
-  ctx.stroke();
-
-  // Short edge arrow - horizontal, from center pointing toward right edge
-  ctx.fillStyle = arrow;
-  ctx.beginPath();
-  ctx.moveTo(lPx / 2, 0);
-  ctx.lineTo(lPx / 2 - 18, -10);
-  ctx.lineTo(lPx / 2 - 18, 10);
-  ctx.closePath();
-  ctx.fill();
-
+  // Long edge arrow - vertical, from center pointing toward top edge
   ctx.strokeStyle = arrow;
   ctx.lineWidth = 3;
   ctx.beginPath();
   ctx.moveTo(0, 0);
-  ctx.lineTo(lPx / 2 - 18, 0);
+  ctx.lineTo(0, -wPx / 2 + 18);
   ctx.stroke();
+
+  ctx.fillStyle = arrow;
+  ctx.beginPath();
+  ctx.moveTo(0, -wPx / 2);
+  ctx.lineTo(-10, -wPx / 2 + 18);
+  ctx.lineTo(10, -wPx / 2 + 18);
+  ctx.closePath();
+  ctx.fill();
+
+  // Short edge arrow - horizontal, from right edge pointing toward center
+  ctx.strokeStyle = arrow;
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(lPx / 2, 0);
+  ctx.lineTo(18, 0);
+  ctx.stroke();
+
+  ctx.fillStyle = arrow;
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(18, -10);
+  ctx.lineTo(18, 10);
+  ctx.closePath();
+  ctx.fill();
 
   ctx.restore();
 

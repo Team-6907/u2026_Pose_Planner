@@ -125,7 +125,7 @@ export class GitHubAPIFetch {
       }
 
       // Create or update file
-      const content = JSON.stringify(poseData, null, 2);
+      const content = JSON.stringify(poseData, null, 2) + '\n';
       const body = {
         message: commitMessage,
         content: btoa(content),

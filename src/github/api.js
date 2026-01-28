@@ -133,7 +133,7 @@ export class GitHubAPI {
       }
 
       // Create or update file
-      const content = JSON.stringify(poseData, null, 2);
+      const content = JSON.stringify(poseData, null, 2) + '\n';
       await this.octokit.rest.repos.createOrUpdateFileContents({
         owner: this.config.owner,
         repo: this.config.repo,

@@ -11,7 +11,7 @@ export function createState() {
     pan: { x: 0, y: 0 },
     isPanning: false,
     panStart: null,
-    robot: { lengthMeters: 0.618, widthMeters: 0.766 },
+    robot: { lengthMeters: 0.82, widthMeters: 0.975 },
     undoStack: [],
     redoStack: []
   };

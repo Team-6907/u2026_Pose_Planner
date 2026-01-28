@@ -271,13 +271,16 @@ function handleImportConfirm(app) {
 
   try {
     const data = JSON.parse(text);
-    const groups = parsePosePayload(data);
+    const { groups, robot } = parsePosePayload(data);
     if (groups.length === 0) {
       app.setStatus("Invalid JSON format", true);
       return;
     }
     saveUndoState(app.state);
     app.state.groups = groups;
+    if (robot) {
+      app.state.robot = robot;
+    }
     syncGroupFilter(app.state);
     selectFirstPose(app.state);
     saveToLocalStorage(app.state);
@@ -297,13 +300,16 @@ function handleFileUpload(app, event) {
   reader.onload = (e) => {
     try {
       const data = JSON.parse(e.target.result);
-      const groups = parsePosePayload(data);
+      const { groups, robot } = parsePosePayload(data);
       if (groups.length === 0) {
         app.setStatus("Invalid JSON format", true);
         return;
       }
       saveUndoState(app.state);
       app.state.groups = groups;
+      if (robot) {
+        app.state.robot = robot;
+      }
       syncGroupFilter(app.state);
       selectFirstPose(app.state);
       saveToLocalStorage(app.state);
@@ -350,10 +356,11 @@ function closeConfigModal(app) {
 }
 
 function saveConfig(app) {
-  const lengthMm = parseInt(app.elements.robotLength.value) || 618;
-  const widthMm = parseInt(app.elements.robotWidth.value) || 766;
+  const lengthMm = parseInt(app.elements.robotLength.value) || 820;
+  const widthMm = parseInt(app.elements.robotWidth.value) || 975;
   app.state.robot.lengthMeters = lengthMm / 1000;
   app.state.robot.widthMeters = widthMm / 1000;
+  saveToLocalStorage(app.state);
   closeConfigModal(app);
   render(app);
   app.setStatus(`Robot size: ${lengthMm}mm × ${widthMm}mm`);

@@ -8,7 +8,10 @@ const STORAGE_KEY = "goatlib-pose-planner-state";
 export async function loadDefaultPoses(app) {
   const saved = loadFromLocalStorage();
   if (saved) {
-    app.state.groups = saved;
+    app.state.groups = saved.groups;
+    if (saved.robot) {
+      app.state.robot = saved.robot;
+    }
     syncGroupFilter(app.state);
     selectFirstPose(app.state);
     app.setStatus(`Loaded ${getTotalPoseCount(app.state)} poses from browser storage.`);
@@ -18,26 +21,35 @@ export async function loadDefaultPoses(app) {
 }
 
 export function parsePosePayload(data) {
+  let groups = [];
+  let robot = null;
+
   if (Array.isArray(data?.groups)) {
-    return data.groups.map((group, groupIndex) => ({
+    groups = data.groups.map((group, groupIndex) => ({
       name: String(group.name ?? `Group ${groupIndex + 1}`),
       color: group.color ?? pickGroupColor(groupIndex),
       poses: parsePoseList(group.poses ?? [])
     }));
+    if (data.robot) {
+      robot = {
+        lengthMeters: Number(data.robot.lengthMeters ?? 0.82),
+        widthMeters: Number(data.robot.widthMeters ?? 0.975)
+      };
+    }
+  } else {
+    const arr = Array.isArray(data) ? data : data?.poses;
+    if (Array.isArray(arr)) {
+      groups = [
+        {
+          name: "Default",
+          color: pickGroupColor(0),
+          poses: parsePoseList(arr)
+        }
+      ];
+    }
   }
 
-  const arr = Array.isArray(data) ? data : data?.poses;
-  if (Array.isArray(arr)) {
-    return [
-      {
-        name: "Default",
-        color: pickGroupColor(0),
-        poses: parsePoseList(arr)
-      }
-    ];
-  }
-
-  return [];
+  return { groups, robot };
 }
 
 export function buildPosePayload(state) {
@@ -46,6 +58,10 @@ export function buildPosePayload(state) {
     field: FIELD_ASSET.id,
     units: "meters",
     thetaUnits: "degrees",
+    robot: {
+      lengthMeters: round(state.robot.lengthMeters, 3),
+      widthMeters: round(state.robot.widthMeters, 3)
+    },
     groups: state.groups.map((group) => ({
       name: group.name,
       color: group.color ?? undefined,
@@ -76,7 +92,8 @@ export function loadFromLocalStorage() {
     const json = localStorage.getItem(STORAGE_KEY);
     if (!json) return null;
     const data = JSON.parse(json);
-    return parsePosePayload(data);
+    const result = parsePosePayload(data);
+    return result.groups.length > 0 ? result : null;
   } catch (error) {
     console.error("Failed to load from localStorage:", error);
     return null;

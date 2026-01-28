@@ -228,8 +228,8 @@ function drawPose(app, pose, group, isSelectedPose) {
   const { x, y } = fieldToPixel(state, app.elements, pose.x, pose.y);
   const theta = degreesToRadians(pose.thetaDegrees);
   const m = state.fieldMetrics;
-  const lPx = state.robot.lengthMeters * m.pxPerMeterX;
-  const wPx = state.robot.widthMeters * m.pxPerMeterY;
+  const lPx = state.robot.lengthMeters * m.pxPerMeterX;  // front-back (820mm)
+  const wPx = state.robot.widthMeters * m.pxPerMeterX;   // side-to-side (975mm)
 
   const groupColor = group?.color || "#94a3b8";
   const fill = isSelectedPose ? "rgba(16, 185, 129, 0.6)" : colorWithAlpha(groupColor, 0.45);
@@ -238,36 +238,35 @@ function drawPose(app, pose, group, isSelectedPose) {
 
   ctx.save();
   ctx.translate(x, y);
-  ctx.rotate(-theta);
-
+  ctx.rotate(theta + Math.PI / 2);
   ctx.fillStyle = fill;
   ctx.strokeStyle = stroke;
   ctx.lineWidth = 3;
-  roundRect(ctx, -lPx / 2, -wPx / 2, lPx, wPx, 6);
+  roundRect(ctx, -wPx / 2, -lPx / 2, wPx, lPx, 6);
   ctx.fill();
   ctx.stroke();
 
-  // Long edge arrow - vertical, from center pointing toward top edge
+  // Shooter arrow - from center pointing toward front edge (length direction)
   ctx.strokeStyle = arrow;
   ctx.lineWidth = 3;
   ctx.beginPath();
   ctx.moveTo(0, 0);
-  ctx.lineTo(0, -wPx / 2 + 18);
+  ctx.lineTo(0, -lPx / 2 + 18);
   ctx.stroke();
 
   ctx.fillStyle = arrow;
   ctx.beginPath();
-  ctx.moveTo(0, -wPx / 2);
-  ctx.lineTo(-10, -wPx / 2 + 18);
-  ctx.lineTo(10, -wPx / 2 + 18);
+  ctx.moveTo(0, -lPx / 2);
+  ctx.lineTo(-10, -lPx / 2 + 18);
+  ctx.lineTo(10, -lPx / 2 + 18);
   ctx.closePath();
   ctx.fill();
 
-  // Short edge arrow - horizontal, from right edge pointing toward center
+  // Intake arrow - from side edge pointing toward center (width direction)
   ctx.strokeStyle = arrow;
   ctx.lineWidth = 3;
   ctx.beginPath();
-  ctx.moveTo(lPx / 2, 0);
+  ctx.moveTo(wPx / 2, 0);
   ctx.lineTo(18, 0);
   ctx.stroke();
 
@@ -283,9 +282,9 @@ function drawPose(app, pose, group, isSelectedPose) {
 
   ctx.font = "bold 14px -apple-system, sans-serif";
   ctx.fillStyle = "rgba(0,0,0,0.6)";
-  ctx.fillText(pose.name, x + lPx / 2 + 10, y - 4);
+  ctx.fillText(pose.name, x + wPx / 2 + 10, y - 4);
   ctx.fillStyle = "#fff";
-  ctx.fillText(pose.name, x + lPx / 2 + 8, y - 6);
+  ctx.fillText(pose.name, x + wPx / 2 + 8, y - 6);
 
   if (isSelectedPose) {
     const h = getHandlePixel(state, app.elements, pose);

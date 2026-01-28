@@ -32,8 +32,8 @@ export function parsePosePayload(data) {
     }));
     if (data.robot) {
       robot = {
-        lengthMeters: Number(data.robot.lengthMeters ?? 0.82),
-        widthMeters: Number(data.robot.widthMeters ?? 0.975)
+        lengthMeters: Number(data.robot.lengthMeters ?? 0.975),
+        widthMeters: Number(data.robot.widthMeters ?? 0.82)
       };
     }
   } else {

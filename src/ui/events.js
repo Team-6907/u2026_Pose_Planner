@@ -69,7 +69,7 @@ function addPoseAtCenter(app) {
     name: createDefaultName(state),
     x: m.fieldLengthMeters / 2,
     y: m.fieldWidthMeters / 2,
-    thetaDegrees: -90
+    thetaDegrees: 0
   });
   app.selectPose(target.groupIndex, target.group.poses.length - 1);
   saveToLocalStorage(state);
@@ -85,7 +85,7 @@ function addPoseAt(app, fx, fy) {
     name: createDefaultName(state),
     x: clamp(fx, 0, m.fieldLengthMeters),
     y: clamp(fy, 0, m.fieldWidthMeters),
-    thetaDegrees: -90
+    thetaDegrees: 0
   });
   app.selectPose(target.groupIndex, target.group.poses.length - 1);
   saveToLocalStorage(state);
@@ -356,8 +356,8 @@ function closeConfigModal(app) {
 }
 
 function saveConfig(app) {
-  const lengthMm = parseInt(app.elements.robotLength.value) || 820;
-  const widthMm = parseInt(app.elements.robotWidth.value) || 975;
+  const lengthMm = parseInt(app.elements.robotLength.value) || 975;
+  const widthMm = parseInt(app.elements.robotWidth.value) || 820;
   app.state.robot.lengthMeters = lengthMm / 1000;
   app.state.robot.widthMeters = widthMm / 1000;
   saveToLocalStorage(app.state);

@@ -5,6 +5,7 @@ import { wireEvents } from "./ui/events.js";
 import { render, renderPoseList, updateInputsFromSelection } from "./ui/render.js";
 import { createStatus } from "./ui/status.js";
 import { createState, selectPose } from "./state/poseState.js";
+import { GitHubUI } from "./github/ui.js";
 
 document.addEventListener("DOMContentLoaded", init);
 
@@ -31,4 +32,7 @@ async function init() {
   await loadDefaultPoses(app);
   wireEvents(app);
   render(app);
+
+  // Initialize GitHub integration
+  app.github = new GitHubUI(app);
 }

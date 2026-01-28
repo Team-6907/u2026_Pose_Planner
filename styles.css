@@ -806,3 +806,117 @@ canvas {
 .context-menu button.danger:hover {
   background: rgba(239, 68, 68, 0.15);
 }
+
+/* GitHub Integration */
+.github-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.github-controls .btn {
+  width: 100%;
+  justify-content: center;
+  font-size: 13px;
+  padding: 10px 12px;
+}
+
+.github-status {
+  font-size: 12px;
+  min-height: 18px;
+  padding-top: 8px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.github-status.success {
+  color: var(--success);
+}
+
+.github-status.error {
+  color: var(--danger);
+}
+
+.github-status.loading {
+  color: var(--accent);
+}
+
+.github-test-result {
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  display: none;
+}
+
+.github-test-result.show {
+  display: block;
+}
+
+.github-test-result.success {
+  background: rgba(74, 222, 128, 0.1);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  color: var(--success);
+}
+
+.github-test-result.error {
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  color: var(--danger);
+}
+
+.form-help {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.form-help code {
+  background: var(--bg-tertiary);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: "SF Mono", Monaco, monospace;
+  font-size: 11px;
+}
+
+.form-help a {
+  color: var(--accent-light);
+  text-decoration: none;
+}
+
+.form-help a:hover {
+  text-decoration: underline;
+}
+
+.modal-body input[type="text"],
+.modal-body input[type="password"],
+.modal-body select {
+  padding: 11px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-family: inherit;
+  width: 100%;
+  transition: all 0.15s ease;
+}
+
+.modal-body input[type="text"]:focus,
+.modal-body input[type="password"]:focus,
+.modal-body select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.modal-body select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.modal-body input[type="password"]::placeholder {
+  color: var(--text-muted);
+}

@@ -238,7 +238,8 @@ function drawPose(app, pose, group, isSelectedPose) {
 
   ctx.save();
   ctx.translate(x, y);
-  ctx.rotate(theta + Math.PI / 2);
+  // Canvas Y axis points down, so negate to keep CCW-positive field angles.
+  ctx.rotate(-theta + Math.PI / 2);
   ctx.fillStyle = fill;
   ctx.strokeStyle = stroke;
   ctx.lineWidth = 3;

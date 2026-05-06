@@ -3,34 +3,19 @@ import { degreesToRadians } from "../utils/math.js";
 export function fieldToPixel(state, elements, fx, fy) {
   const m = state.fieldMetrics;
   const w = elements.canvas.width;
-  const h = elements.canvas.height;
-  // Wall-blue after rotating the source field layout 180 degrees:
-  // X=0 is at the blue wall on the left, and +Y points down the canvas.
+  // Wall-blue: X=0 at blue alliance (left side after image flip)
   return {
     x: (w - m.right) + fx * m.pxPerMeterX,
-    y: (h - m.bottom) + fy * m.pxPerMeterY
+    y: m.bottom - fy * m.pxPerMeterY
   };
 }
 
 export function pixelToField(state, elements, px, py) {
   const m = state.fieldMetrics;
   const w = elements.canvas.width;
-  const h = elements.canvas.height;
   return {
     x: (px - w + m.right) / m.pxPerMeterX,
-    y: (py - h + m.bottom) / m.pxPerMeterY
-  };
-}
-
-export function getFieldPixelBounds(state, elements) {
-  const m = state.fieldMetrics;
-  const w = elements.canvas.width;
-  const h = elements.canvas.height;
-  return {
-    left: w - m.right,
-    right: w - m.left,
-    top: h - m.bottom,
-    bottom: h - m.top
+    y: (m.bottom - py) / m.pxPerMeterY
   };
 }
 

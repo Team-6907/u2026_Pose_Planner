@@ -1,6 +1,6 @@
 import { colorWithAlpha } from "../utils/color.js";
 import { degreesToRadians, round } from "../utils/math.js";
-import { fieldToPixel, getFieldPixelBounds, getHandlePixel } from "../field/coords.js";
+import { fieldToPixel, getHandlePixel } from "../field/coords.js";
 import {
   ensureSelectionVisible,
   getSelectedGroupName,
@@ -19,7 +19,7 @@ export function render(app) {
   ctx.save();
   ctx.translate(state.pan.x, state.pan.y);
 
-  // Draw the field layout rotated 180 degrees into wall-blue orientation.
+  // Draw the source field image rotated 180 degrees. Coordinate mapping stays wall-blue.
   ctx.save();
   ctx.translate(canvas.width, canvas.height);
   ctx.rotate(Math.PI);
@@ -196,22 +196,21 @@ export function updateInputsFromSelection(app) {
 function drawGrid(app) {
   const { state, ctx } = app;
   const m = state.fieldMetrics;
-  const bounds = getFieldPixelBounds(state, app.elements);
   ctx.strokeStyle = "rgba(16, 185, 129, 0.08)";
   ctx.lineWidth = 1;
 
   for (let x = 0; x <= m.fieldLengthMeters; x++) {
     const px = fieldToPixel(state, app.elements, x, 0);
     ctx.beginPath();
-    ctx.moveTo(px.x, bounds.top);
-    ctx.lineTo(px.x, bounds.bottom);
+    ctx.moveTo(px.x, m.top);
+    ctx.lineTo(px.x, m.bottom);
     ctx.stroke();
   }
   for (let y = 0; y <= m.fieldWidthMeters; y++) {
     const px = fieldToPixel(state, app.elements, 0, y);
     ctx.beginPath();
-    ctx.moveTo(bounds.left, px.y);
-    ctx.lineTo(bounds.right, px.y);
+    ctx.moveTo(m.left, px.y);
+    ctx.lineTo(m.right, px.y);
     ctx.stroke();
   }
 
@@ -219,8 +218,8 @@ function drawGrid(app) {
   ctx.lineWidth = 2;
   const cx = fieldToPixel(state, app.elements, m.fieldLengthMeters / 2, 0);
   ctx.beginPath();
-  ctx.moveTo(cx.x, bounds.top);
-  ctx.lineTo(cx.x, bounds.bottom);
+  ctx.moveTo(cx.x, m.top);
+  ctx.lineTo(cx.x, m.bottom);
   ctx.stroke();
 }
 
@@ -239,7 +238,8 @@ function drawPose(app, pose, group, isSelectedPose) {
 
   ctx.save();
   ctx.translate(x, y);
-  ctx.rotate(theta + Math.PI / 2);
+  // Canvas Y axis points down, so negate to keep CCW-positive field angles.
+  ctx.rotate(-theta + Math.PI / 2);
   ctx.fillStyle = fill;
   ctx.strokeStyle = stroke;
   ctx.lineWidth = 3;
